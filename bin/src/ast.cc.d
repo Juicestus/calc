@@ -1,5 +1,6 @@
 bin/./src/ast.cc.o: src/ast.cc src/ast.h src/token.h src/common.h \
-  lib/argparse/include/argparse/argparse.hpp src/util/util.h
+  lib/argparse/include/argparse/argparse.hpp src/util/util.h \
+  src/exception.h
 
 src/ast.h:
 
@@ -10,3 +11,5 @@ src/common.h:
 lib/argparse/include/argparse/argparse.hpp:
 
 src/util/util.h:
+
+src/exception.h:

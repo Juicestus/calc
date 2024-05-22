@@ -69,8 +69,7 @@ Expr* Parser::ParseElement() {
 
         return new IdentExpr(name);
     }
-    // wtf is this case? can this happen?
-    return new IdentExpr("__undefined__");
+    throw new Exception("invalid token", StrFmt("Expected [%s], found [%s]", Token::TypeStr(TOK_ID), tk->TypeStr()), -1, __FILE__, __LINE__);
 }
 
 Expr* Parser::ParseExpr() {

@@ -1,6 +1,5 @@
 #include "main.h"
 
-#include <locale>
 
 
 int main(const int argc, const char** argv) {
@@ -14,6 +13,10 @@ int main(const int argc, const char** argv) {
         // std::cin >> buff;
         std::getline(std::cin, buff);
 
+        if (buff == "exit") {
+            break;
+        }
+
         // // Log the tokenized expression:
         // lexer = new Lexer(buff);
         // Token* tk;
@@ -22,15 +25,24 @@ int main(const int argc, const char** argv) {
         // }
         // std::cout << "\n";
 
-        lexer = new Lexer(buff);
+        Parser* parser;
+        Expr* expr;
 
-        lexer->NextToken();
-        Parser* parser = new Parser(lexer);
+        try {
+            lexer = new Lexer(buff);
 
-        Expr* expr = parser->ParseExpr();
+            lexer->NextToken();
+            parser = new Parser(lexer);
+
+            expr = parser->ParseExpr();
+
+        } catch (Exception* e) {
+            std::cout << e->Str() << "\n";
+            continue;
+        }
 
         // Log the parsed expression:
-        std::cout << expr->Str() << "\n";
+        // std::cout << expr->Str() << "\n";
 
         std::cout << expr->Eval() << "\n";
     }

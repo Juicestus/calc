@@ -6,6 +6,7 @@
 #include <map>
 #include <memory>
 #include "token.h"
+#include "exception.h"
 
 class Expr {
 public:

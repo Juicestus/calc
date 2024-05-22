@@ -4,6 +4,7 @@
 #include "common.h"
 #include "token.h"
 #include "util/util.h"
+#include "exception.h"
 
 class Lexer {
 

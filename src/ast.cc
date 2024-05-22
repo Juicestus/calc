@@ -39,7 +39,7 @@ BinOpExpr::BinOpExpr(Expr* left, Expr* right, TokenType tk_type) {
         DEF_B_OP(TOK_POWER, std::pow(x, y))
     }
 
-    ErrFmt("Error: undefined operation. Operator [%s] is not defined. (%s)", Token::TypeStr(tk_type), __FUNCTION__);
+    throw new Exception("undefined operation", StrFmt("Operator [%s] is not defined", Token::TypeStr(tk_type)), -1, __FILE__, __LINE__);
 }
 
 BinOpExpr::~BinOpExpr() {
@@ -64,7 +64,7 @@ UnaryOpExpr::UnaryOpExpr(Expr* exp, TokenType tk_type) {
     switch (tk_type) {
         DEF_U_OP(TOK_MINUS, -x)
     }
-    ErrFmt("Error: undefined operation. Operator [%s] is not defined. (%s)", Token::TypeStr(tk_type), __FUNCTION__);
+    throw new Exception("undefined operation", StrFmt("Operator [%s] is not defined", Token::TypeStr(tk_type)), -1, __FILE__, __LINE__);
 }
 
 UnaryOpExpr::~UnaryOpExpr() {
@@ -85,7 +85,7 @@ FuncCallExpr::FuncCallExpr(const std::string& name, std::vector<Expr*> args) {
 
     auto func_tmp = FuncManager::GetInstance().Resolve(name);
     if (func_tmp == nullptr) {
-        ErrFmt("Error: undefined operation. Function [%s] is not defined. (%s)", name.c_str(), __FUNCTION__);
+        throw new Exception("undefined operation", StrFmt("Function [%s] is not defined", name.c_str()), -1, __FILE__, __LINE__);
     }
     this->callback = func_tmp;
 }

@@ -1,7 +1,7 @@
 #ifndef __JUSTUS_UTIL_H__
 #define __JUSTUS_UTIL_H__
 
-#define DO_SRC_LOGGING
+// #define DO_SRC_LOGGING
 
 #ifdef DO_SRC_LOGGING
     #define LOG(I) std::cout << "(" << __FILE__ << ":" << __LINE__ << ") \t" << __FUNCTION__ << " " << I << std::endl;
