@@ -1,6 +1,8 @@
 #ifndef _CALC_COMMON_H_
 #define _CALC_COMMON_H_
 
+#define X(I) std::cout << I << std::endl;
+
 #include "argparse.hpp"
 
 #include <algorithm>

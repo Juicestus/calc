@@ -24,6 +24,16 @@ public:
     double Eval();
 };
 
+class IdentExpr : public Expr {
+    std::string name;
+
+public:
+    IdentExpr(const std::string& name);
+    ~IdentExpr() = default;
+
+    std::string Str();
+    double Eval();
+};
 
 
 class BinOpExpr : public Expr {
@@ -62,11 +72,6 @@ public:
 class FuncCallExpr : public Expr {
 
 private:
-    // oh god
-    static const std::map<std::string, std::function<double(std::vector<double>)>> functions = {
-        { "sin", [](std::vector<double> args)->double { return std::sin(args[0]); } }
-    };
-
     std::function<double(std::vector<double>)> callback;
     std::vector<Expr*> args;
     std::string name;

@@ -93,6 +93,6 @@ bool Lexer::Consume(TokenType tk) {
 
 void Lexer::Expect(TokenType tk) {
     if (!Consume(tk)) {
-        ErrFmt("Error: invalid token, expected [%s], found [%s]. (Lexer::Expect)", Token::TypeStr(tk), token->TypeStr());
+        ErrFmt("Error: invalid token. Expected [%s], found [%s]. (%s)", Token::TypeStr(tk), token->TypeStr(), __FUNCTION__);
     }
 }

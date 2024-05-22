@@ -9,23 +9,21 @@
 
 class Parser { 
 public:
-    static Expr* Parse(Lexer* lex);
-
-private: 
-
-    Lexer* lex;
 
     Parser(Lexer* lex) : lex(lex) {}
-
     Expr* ParseExpr(); 
+
+private: 
+    Lexer* lex;
+
     Expr* ParseAdditive(); 
     Expr* ParseMultiplicative();
     Expr* ParsePower();
     Expr* ParseUnaryPrefix();
     Expr* ParseNumericLiteral();
-    Expr* ParseFunctionCall();
+    Expr* ParseElement();
 
-    Expr* Parser::ParseBinaryOperator(std::vector<TokenType> tks, Expr* (Parser::*callback)(void));
+    Expr* ParseBinaryOperator(std::vector<TokenType> tks, Expr* (Parser::*callback)(void));
 };
 
 #endif

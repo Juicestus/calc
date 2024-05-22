@@ -12,7 +12,19 @@ double NumericLiteral::Eval() {
     return this->value;
 }
 
-#define DEF_B_OP(T, XPR) case T: this->callback = [](double x, double y) -> double { return XPR; }; break;
+IdentExpr::IdentExpr(const std::string& name) {
+    this->name = name;
+}
+
+std::string IdentExpr::Str() {
+    return this->name;
+}
+
+double IdentExpr::Eval() {
+    return 1; // no variable system yet
+}
+
+#define DEF_B_OP(T, XPR) case T: this->callback = [](double x, double y) -> double { return XPR; }; return;
 
 BinOpExpr::BinOpExpr(Expr* left, Expr* right, TokenType tk_type) {
     this->left = left;
@@ -28,7 +40,6 @@ BinOpExpr::BinOpExpr(Expr* left, Expr* right, TokenType tk_type) {
     }
 
     ErrFmt("Error: undefined operation. Operator [%s] is not defined. (%s)", Token::TypeStr(tk_type), __FUNCTION__);
-    // this should err out, TODO: add err
 }
 
 BinOpExpr::~BinOpExpr() {
@@ -37,7 +48,6 @@ BinOpExpr::~BinOpExpr() {
 }
 
 std::string BinOpExpr::Str() {
-    return "binop";
     return "( " + left->Str() + " " + Token::TypeStr(tk_type) + " " + right->Str() + " )";
 }
 
@@ -45,8 +55,7 @@ double BinOpExpr::Eval() {
     return this->callback(left->Eval(), right->Eval());
 }
 
-
-#define DEF_U_OP(T, XPR) case T: this->callback = [](double x) -> double { return XPR; }; break;
+#define DEF_U_OP(T, XPR) case T: this->callback = [](double x) -> double { return XPR; }; return;
 
 UnaryOpExpr::UnaryOpExpr(Expr* exp, TokenType tk_type) {
     this->exp = exp;
@@ -94,7 +103,7 @@ std::string FuncCallExpr::Str() {
         if (++i == args.size()) break;
         output += ", ";
     }
-    output += " )";
+    return output + " )";
 }
 
 double FuncCallExpr::Eval() {

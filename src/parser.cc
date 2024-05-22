@@ -1,16 +1,5 @@
 #include "parser.h"
 
-Expr* Parser::Parse(Lexer* lex) {
-    
-
-
-}
-
-Expr* Parser::ParseExpr() {
-    return ParseAdditive();
-}
-
-
 Expr* Parser::ParseAdditive() {
     return ParseBinaryOperator({TOK_PLUS, TOK_MINUS}, &Parser::ParseMultiplicative);
 }
@@ -20,7 +9,7 @@ Expr* Parser::ParseMultiplicative() {
 }
 
 Expr* Parser::ParsePower() {
-    return ParseBinaryOperator({TOK_POWER}, &Parser::ParseUnaryPrefix);
+    return ParseBinaryOperator({TOK_POWER}, &Parser::ParseAdditive);
 }
 
 Expr* Parser::ParseUnaryPrefix() {
@@ -29,7 +18,7 @@ Expr* Parser::ParseUnaryPrefix() {
         lex->Expect(op->type);
         return new UnaryOpExpr(ParseNumericLiteral(), op->type);
     } else {
-        return ParseNumericLiteral();
+        return ParseExpr();
     }
 }
 
@@ -39,21 +28,55 @@ Expr* Parser::ParseNumericLiteral() {
         lex->Expect(tk->type); // cannot fail -- bad practice using this
         return new NumericLiteral(tk->value);
     }
-    return ParseIdentifier();
+    return ParseElement();
 }
+/*
+ auto elements = new Expressions();
+    lex->Match(start);
+    if (lex->Tk()->type != end) {
+        elements->push_back(ParseExpression());
+        while (lex->Consume(',')) {
+            elements->push_back(ParseExpression());
+        }
+    }
+    lex->Match(end);
+    return elements;*/
 
-Expr* Parser::ParseIdentifier() {
+Expr* Parser::ParseElement() {
     Token* tk = lex->GetToken();
     if (tk->type == TOK_ID) {
+        std::string name = tk->value;
+
         lex->Expect(tk->type); // cannot fail -- bad practice using this
+        tk = lex->GetToken();
 
-        if ()
+        if (tk->type == TOK_LPAREN) {
+            lex->Expect(tk->type); // cannot fail -- bad practice using this
+            std::vector<Expr*> args;
 
+            if (lex->GetToken()->type != TOK_RPAREN) {
+                args.push_back(ParseExpr());
+                while (lex->Consume(TOK_COMMA)) {
+                    args.push_back(ParseExpr());
+                }
+            }
+            lex->Expect(TOK_RPAREN);
 
-        return new IdentifierExpr(tk->value);
+            return new FuncCallExpr(name, args);
+        }
+
+        return new IdentExpr(name);
     }
+    // wtf is this case? can this happen?
+    return new IdentExpr("__undefined__");
 }
 
+Expr* Parser::ParseExpr() {
+    bool grouped = lex->Consume(TOK_LPAREN);
+    Expr* expr = ParseUnaryPrefix();
+    if (grouped) lex->Expect(TOK_RPAREN);
+    return expr;
+}
 
 Expr* Parser::ParseBinaryOperator(std::vector<TokenType> tks, Expr* (Parser::*callback)(void)) {
     Expr* left = (*this.*callback)();
