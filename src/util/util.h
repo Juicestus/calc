@@ -1,6 +1,15 @@
 #ifndef __JUSTUS_UTIL_H__
 #define __JUSTUS_UTIL_H__
 
+#define DO_SRC_LOGGING
+
+#ifdef DO_SRC_LOGGING
+    #define LOG(I) std::cout << "(" << __FILE__ << ":" << __LINE__ << ") \t" << __FUNCTION__ << " " << I << std::endl;
+#else
+    #define LOG(I) ;
+#endif
+
+
 #include "common.h"
 
 // The following Is{} functions are commonly used

@@ -1,24 +1,37 @@
 #include "parser.h"
 
 Expr* Parser::ParseAdditive() {
-    return ParseBinaryOperator({TOK_PLUS, TOK_MINUS}, &Parser::ParseMultiplicative);
+    LOG(1)
+    return ParseBinaryOperator({TOK_PLUS, TOK_MINUS}, &Parser::ParseUnaryPrefix);
 }
 
 Expr* Parser::ParseMultiplicative() {
-    return ParseBinaryOperator({TOK_MUL, TOK_DIV}, &Parser::ParsePower);
+    LOG(1)
+    return ParseBinaryOperator({TOK_MUL, TOK_DIV}, &Parser::ParseAdditive);
 }
 
 Expr* Parser::ParsePower() {
-    return ParseBinaryOperator({TOK_POWER}, &Parser::ParseAdditive);
+    LOG(1)
+    return ParseBinaryOperator({TOK_POWER}, &Parser::ParseMultiplicative);
 }
 
 Expr* Parser::ParseUnaryPrefix() {
     Token* op = lex->GetToken();
     if (op->type == TOK_MINUS) {
         lex->Expect(op->type);
-        return new UnaryOpExpr(ParseNumericLiteral(), op->type);
+
+        Expr* expr;
+        if (lex->GetToken()->type == TOK_LPAREN) {
+            LOG(1)
+            expr = ParseExpr();
+        } else {
+            LOG(2)
+            expr = ParseNumericLiteral();
+        }
+
+        return new UnaryOpExpr(expr, op->type);
     } else {
-        return ParseExpr();
+        return ParseNumericLiteral();
     }
 }
 
@@ -30,17 +43,6 @@ Expr* Parser::ParseNumericLiteral() {
     }
     return ParseElement();
 }
-/*
- auto elements = new Expressions();
-    lex->Match(start);
-    if (lex->Tk()->type != end) {
-        elements->push_back(ParseExpression());
-        while (lex->Consume(',')) {
-            elements->push_back(ParseExpression());
-        }
-    }
-    lex->Match(end);
-    return elements;*/
 
 Expr* Parser::ParseElement() {
     Token* tk = lex->GetToken();
@@ -73,7 +75,9 @@ Expr* Parser::ParseElement() {
 
 Expr* Parser::ParseExpr() {
     bool grouped = lex->Consume(TOK_LPAREN);
-    Expr* expr = ParseUnaryPrefix();
+    LOG(1)
+    Expr* expr = ParsePower();
+    LOG(2)
     if (grouped) lex->Expect(TOK_RPAREN);
     return expr;
 }
@@ -81,10 +85,13 @@ Expr* Parser::ParseExpr() {
 Expr* Parser::ParseBinaryOperator(std::vector<TokenType> tks, Expr* (Parser::*callback)(void)) {
     Expr* left = (*this.*callback)();
     Token* op;
+    LOG(1)
     if (VectorContains(tks, (op = lex->GetToken())->type)) {
         lex->Expect(op->type); // cannot fail -- bad practice using this
+        LOG(2)
         // Expr* right = (*this.*callback)();
         Expr* right = ParseExpr();
+        LOG(3)
         left = new BinOpExpr(left, right, op->type);
     }
     return left;
