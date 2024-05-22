@@ -21,7 +21,11 @@ std::string IdentExpr::Str() {
 }
 
 double IdentExpr::Eval() {
-    return 1; // no variable system yet
+    double* result = RuntimeManager::GetInstance().ResolveVar(this->name, false);
+    if (result == nullptr) {
+        throw new Exception("undefined symbol", StrFmt("Variable [%s] is not defined", name.c_str()), -1, __FILE__, __LINE__);
+    }
+    return *result;
 }
 
 #define DEF_B_OP(T, XPR) case T: this->callback = [](double x, double y) -> double { return XPR; }; return;
@@ -83,9 +87,9 @@ FuncCallExpr::FuncCallExpr(const std::string& name, std::vector<Expr*> args) {
     this->name = name;
     this->args = args;
 
-    auto func_tmp = FuncManager::GetInstance().Resolve(name);
+    auto func_tmp = RuntimeManager::GetInstance().ResolveFunction(name);
     if (func_tmp == nullptr) {
-        throw new Exception("undefined operation", StrFmt("Function [%s] is not defined", name.c_str()), -1, __FILE__, __LINE__);
+        throw new Exception("undefined symbol", StrFmt("Function [%s] is not defined", name.c_str()), -1, __FILE__, __LINE__);
     }
     this->callback = func_tmp;
 }
@@ -114,12 +118,21 @@ double FuncCallExpr::Eval() {
     return this->callback(arg_eval);
 }
 
-std::function<double(std::vector<double>)> FuncManager::Resolve(const std::string& name) {
+std::function<double(std::vector<double>)> RuntimeManager::ResolveFunction(const std::string& name) {
     if (!functions.count(name)) return nullptr;
     return functions[name];
 }
 
+double* RuntimeManager::ResolveVar(const std::string& name, bool instantiate_if_missing) {
+    if (!variables.count(name)) {
+        if (!instantiate_if_missing) 
+            return nullptr;
+        variables[name] = new double(0);
+    }
+    return variables[name];
+}
+
 // initialize builtin functions
-FuncManager::FuncManager() {
+RuntimeManager::RuntimeManager() {
     functions["sin"] = [](std::vector<double> args)->double { return std::sin(args[0]); };
 }

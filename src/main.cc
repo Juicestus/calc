@@ -8,6 +8,8 @@ int main(const int argc, const char** argv) {
     std::string buff;
     Lexer* lexer;
 
+    double* prev_result_ptr = RuntimeManager::GetInstance().ResolveVar("_", true);
+
     while (true) {
         std::cout << "> ";
         // std::cin >> buff;
@@ -44,6 +46,10 @@ int main(const int argc, const char** argv) {
         // Log the parsed expression:
         // std::cout << expr->Str() << "\n";
 
-        std::cout << expr->Eval() << "\n";
+        double result = expr->Eval();
+
+        *prev_result_ptr = result;
+
+        std::cout << result << "\n";
     }
 }

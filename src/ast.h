@@ -85,23 +85,25 @@ public:
     double Eval();
 };
 
-class FuncManager {
+class RuntimeManager {
 public:
 
-    FuncManager(FuncManager const&) = delete;
-    void operator=(FuncManager const&) = delete;
+    RuntimeManager(RuntimeManager const&) = delete;
+    void operator=(RuntimeManager const&) = delete;
 
-    static FuncManager& GetInstance() {
-        static FuncManager instance;
+    static RuntimeManager& GetInstance() {
+        static RuntimeManager instance;
         return instance;
     }
 
-    std::function<double(std::vector<double>)> Resolve(const std::string& name);
+    std::function<double(std::vector<double>)> ResolveFunction(const std::string& name);
+    double* ResolveVar(const std::string& name, bool instantiate_if_missing);
 
 private:
     std::map<std::string, std::function<double(std::vector<double>)>> functions;
+    std::map<std::string, double*> variables;
 
-    FuncManager();
+    RuntimeManager();
 };
 
 #endif
