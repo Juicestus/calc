@@ -7,17 +7,18 @@
 #include <memory>
 #include "token.h"
 
-class Expression {
+class Expr {
 public:
     virtual std::string Str() = 0;
     virtual double Eval() = 0;
 };
 
-class NumericLiteral : public Expression {
+class NumericLiteral : public Expr {
     double value;
 
 public:
     NumericLiteral(const std::string& value);
+    ~NumericLiteral() = default;
 
     std::string Str();
     double Eval();
@@ -25,19 +26,76 @@ public:
 
 
 
-class BinOpExpression : public Expression {
+class BinOpExpr : public Expr {
 
 private:
     std::function<double(double, double)> callback;
 
 public:
-    Expression* left;
-    Expression* right;
+    Expr* left;
+    Expr* right;
+    TokenType tk_type;
 
-    BinOpExpression(Expression* left, Expression* right, TokenType tk_type);
+    BinOpExpr(Expr* left, Expr* right, TokenType tk_type);
+    ~BinOpExpr();
 
     std::string Str();
     double Eval();
+};
+
+class UnaryOpExpr : public Expr {
+
+private:
+    std::function<double(double)> callback;
+
+public:
+    Expr* exp;
+    TokenType tk_type;
+
+    UnaryOpExpr(Expr* exp, TokenType tk_type);
+    ~UnaryOpExpr();
+
+    std::string Str();
+    double Eval();
+};
+
+class FuncCallExpr : public Expr {
+
+private:
+    // oh god
+    static const std::map<std::string, std::function<double(std::vector<double>)>> functions = {
+        { "sin", [](std::vector<double> args)->double { return std::sin(args[0]); } }
+    };
+
+    std::function<double(std::vector<double>)> callback;
+    std::vector<Expr*> args;
+    std::string name;
+
+public:
+    FuncCallExpr(const std::string& name, std::vector<Expr*> args);
+    ~FuncCallExpr();
+
+    std::string Str();
+    double Eval();
+};
+
+class FuncManager {
+public:
+
+    FuncManager(FuncManager const&) = delete;
+    void operator=(FuncManager const&) = delete;
+
+    static FuncManager& GetInstance() {
+        static FuncManager instance;
+        return instance;
+    }
+
+    std::function<double(std::vector<double>)> Resolve(const std::string& name);
+
+private:
+    std::map<std::string, std::function<double(std::vector<double>)>> functions;
+
+    FuncManager();
 };
 
 #endif

@@ -1,5 +1,5 @@
-#ifndef _CALC_TOKEN_H_
-#define _CALC_TOKEN_H_
+#ifndef _CALC_PARSER_H_
+#define _CALC_PARSER_H_
 
 #include "common.h"
 #include "lexer.h"
@@ -9,7 +9,7 @@
 
 class Parser { 
 public:
-    static Expression* Parse(Lexer* lex);
+    static Expr* Parse(Lexer* lex);
 
 private: 
 
@@ -17,14 +17,15 @@ private:
 
     Parser(Lexer* lex) : lex(lex) {}
 
-    Expression* ParseAdditive(void); 
-    Expression* ParseAdditive(void); 
-    Expression* ParseMultiplicative(void);
-    Expression* ParseUnaryExpression(void);
-    Expression* ParseNumericLiteral(void);
-    Expression* ParseFunctionCall(void);
+    Expr* ParseExpr(); 
+    Expr* ParseAdditive(); 
+    Expr* ParseMultiplicative();
+    Expr* ParsePower();
+    Expr* ParseUnaryPrefix();
+    Expr* ParseNumericLiteral();
+    Expr* ParseFunctionCall();
 
-    Expression* Parser::ParseBinaryOperator(std::vector<TokenType> tks, Expression* (Parser::*callback)(void));
+    Expr* Parser::ParseBinaryOperator(std::vector<TokenType> tks, Expr* (Parser::*callback)(void));
 };
 
 #endif

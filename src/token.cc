@@ -14,7 +14,7 @@ TokenType Token::FromChar(char c) {
     return TOK_END;
 }
 
-std::string Token::TypeStr() {
+std::string Token::TypeStr(TokenType type) { // static function
     switch (type) {
         case TOK_PLUS: return "+";
         case TOK_MINUS: return "-";
@@ -29,6 +29,11 @@ std::string Token::TypeStr() {
         case TOK_NUM: return "num";
     }
     return "?";
+}
+
+
+std::string Token::TypeStr() {
+    return TypeStr(this->type); // for instance (method)
 }
 
 std::string Token::Str() {

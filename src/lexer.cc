@@ -80,6 +80,19 @@ void Lexer::TokenizeNumeric() {
 void Lexer::TokenizeElement() {
     token->type = Token::FromChar(curr_char);
     token->value = NextChar();
-
+    // is this func done?
 }
 
+bool Lexer::Consume(TokenType tk) {
+    if (token->type == tk) {
+        NextToken();
+        return true;
+    }
+    return false;
+}
+
+void Lexer::Expect(TokenType tk) {
+    if (!Consume(tk)) {
+        ErrFmt("Error: invalid token, expected [%s], found [%s]. (Lexer::Expect)", Token::TypeStr(tk), token->TypeStr());
+    }
+}

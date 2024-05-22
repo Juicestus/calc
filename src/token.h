@@ -31,6 +31,7 @@ public:
     Token(TokenType type, int index, const std::string& value) : type(type), index(index), value(value) {}
     ~Token() = default;
 
+    static std::string TypeStr(TokenType type);
     std::string TypeStr();
     std::string Str();
 

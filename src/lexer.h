@@ -15,8 +15,8 @@ public:
 
     Token* NextToken(); // return next token, advance the iterator
 
-    void Match(int); // unsafe  --> if the next token isnt whats provided -> crash w/ error
-    bool Consume(int); // safe  --> if the next token isnt whats provided -> return false 
+    void Expect(TokenType); // unsafe  --> if the next token isnt whats provided -> crash w/ error
+    bool Consume(TokenType); // safe  --> if the next token isnt whats provided -> return false 
 
 private:
     void TokenizeIdentifier(); 
