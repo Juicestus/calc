@@ -7,13 +7,14 @@ Expr* Parser::ParseAssignment() {
         return ParsePower();
     }
     LOG(2)
-    lex->Expect(TOK_ID);
     Lexer* branch = lex->Branch();
+    branch->Expect(TOK_ID);
     bool assign = branch->Consume(TOK_ASSIGN);
     LOG(3)
     if (!assign) {
         return ParsePower();
     }
+    lex->Expect(TOK_ID);
     LOG(4)
     std::string name = tk->value;
     lex->Expect(TOK_ASSIGN);
@@ -38,31 +39,35 @@ Expr* Parser::ParsePower() {
 }
 
 Expr* Parser::ParseUnaryPrefix() {
+    LOG(1)
     Token* op = lex->GetToken();
     if (op->type == TOK_MINUS) {
         lex->Expect(op->type);
-
+        LOG(2)
         Expr* expr;
         if (lex->GetToken()->type == TOK_LPAREN) {
-            LOG(1)
+            LOG(3)
             expr = ParseExpr();
         } else {
-            LOG(2)
+            LOG(4)
             expr = ParseNumericLiteral();
         }
-
         return new UnaryOpExpr(expr, op->type);
     } else {
+        LOG(5)
         return ParseNumericLiteral();
     }
 }
 
 Expr* Parser::ParseNumericLiteral() {
+    LOG(1)
     Token* tk = lex->GetToken();
     if (tk->type == TOK_NUM) {
+        LOG(2)
         lex->Expect(tk->type); // cannot fail -- bad practice using this
         return new NumericLiteral(tk->value);
     }
+    LOG(3)
     return ParseElement();
 }
 

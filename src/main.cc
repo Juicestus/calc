@@ -39,15 +39,13 @@ int main(const int argc, const char** argv) {
 
             expr = parser->ParseExpr();
 
-
-
         } catch (Exception* e) {
             std::cout << e->Str() << "\n";
             continue;
         }
 
         // Log the parsed expression:
-        std::cout << expr->Str() << "\n";
+        // std::cout << expr->Str() << "\n";
 
         result = expr->Eval();
 

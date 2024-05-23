@@ -22,7 +22,7 @@ IdentExpr::IdentExpr(const std::string& name) {
 }
 
 std::string IdentExpr::Str() {
-    return this->name + "@" + std::to_string((uintptr_t)this->var_ptr) + " )";
+    return "[" + this->name + " @ " + std::to_string((uintptr_t)this->var_ptr) + "]";
 }
 
 double IdentExpr::Eval() {
@@ -40,7 +40,7 @@ AssignExpr::AssignExpr(Expr* expr, const std::string& name) {
 }
 
 std::string AssignExpr::Str() {
-    return "( " + this->expr->Str() + " -> " + this->name + "@" + std::to_string((uintptr_t)this->var_ptr) + " )";
+    return "( " + this->expr->Str() + " -> [" + this->name + " @ " + std::to_string((uintptr_t)this->var_ptr) + "] )";
 }
 
 double AssignExpr::Eval() {
