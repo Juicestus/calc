@@ -27,10 +27,24 @@ public:
 
 class IdentExpr : public Expr {
     std::string name;
+    double* var_ptr;
 
 public:
     IdentExpr(const std::string& name);
     ~IdentExpr() = default;
+
+    std::string Str();
+    double Eval();
+};
+
+class AssignExpr : public Expr {
+    std::string name;
+    Expr* expr;
+    double* var_ptr;
+
+public:
+    AssignExpr(Expr* expr, const std::string& name);
+    ~AssignExpr() = default;
 
     std::string Str();
     double Eval();

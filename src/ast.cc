@@ -14,18 +14,39 @@ double NumericLiteral::Eval() {
 
 IdentExpr::IdentExpr(const std::string& name) {
     this->name = name;
+
+    this->var_ptr = RuntimeManager::GetInstance().ResolveVar(this->name, false);
+    if (this->var_ptr == nullptr) {
+        throw new Exception("undefined symbol", StrFmt("Variable [%s] is not defined", name.c_str()), -1, __FILE__, __LINE__);
+    }
 }
 
 std::string IdentExpr::Str() {
-    return this->name;
+    return this->name + "@" + std::to_string((uintptr_t)this->var_ptr) + " )";
 }
 
 double IdentExpr::Eval() {
-    double* result = RuntimeManager::GetInstance().ResolveVar(this->name, false);
-    if (result == nullptr) {
-        throw new Exception("undefined symbol", StrFmt("Variable [%s] is not defined", name.c_str()), -1, __FILE__, __LINE__);
-    }
-    return *result;
+    return *var_ptr;
+}
+
+AssignExpr::AssignExpr(Expr* expr, const std::string& name) {
+    this->name = name;
+    this->expr = expr;
+
+    var_ptr = RuntimeManager::GetInstance().ResolveVar(this->name, true);
+    // if (var_ptr == nullptr) {
+        // throw new Exception("undefined symbol", StrFmt("Variable [%s] is not defined", name.c_str()), -1, __FILE__, __LINE__);
+    // }
+}
+
+std::string AssignExpr::Str() {
+    return "( " + this->expr->Str() + " -> " + this->name + "@" + std::to_string((uintptr_t)this->var_ptr) + " )";
+}
+
+double AssignExpr::Eval() {
+    double value = this->expr->Eval();
+    *var_ptr = value;
+    return value;
 }
 
 #define DEF_B_OP(T, XPR) case T: this->callback = [](double x, double y) -> double { return XPR; }; return;

@@ -19,6 +19,8 @@ enum TokenType {
     TOK_RPAREN,
     TOK_COMMA,
     TOK_POWER,
+    
+    TOK_ASSIGN,
 };
 
 class Token {

@@ -14,6 +14,16 @@ Lexer::~Lexer() {
     free((void*)this->expression); // explicilty free this memory
 }
 
+Lexer* Lexer::Branch() {
+    // creates a copy of the current lexer at the current position
+    Lexer* branched = new Lexer(this->expression);
+    branched->curr_char = curr_char;
+    branched->next_char = next_char;
+    branched->index = index;
+    branched->token = token;
+    return branched;
+}
+
 // Some getters, TODO: inline?
 int Lexer::Location() { return index; } //ifnoref remove
 Token* Lexer::GetToken() { return token; }

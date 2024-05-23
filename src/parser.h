@@ -16,6 +16,7 @@ public:
 private: 
     Lexer* lex;
 
+    Expr* ParseAssignment(); 
     Expr* ParseAdditive(); 
     Expr* ParseMultiplicative();
     Expr* ParsePower();

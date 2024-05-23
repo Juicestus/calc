@@ -10,6 +10,7 @@ TokenType Token::FromChar(char c) {
         case ')': return TOK_RPAREN;
         case ',': return TOK_COMMA;
         case '^': return TOK_POWER;
+        case '=': return TOK_ASSIGN;
     }
     return TOK_END;
 }
@@ -24,13 +25,13 @@ std::string Token::TypeStr(TokenType type) { // static function
         case TOK_RPAREN: return ")";
         case TOK_COMMA: return ",";
         case TOK_POWER: return "^";
+        case TOK_ASSIGN: return "=";
         case TOK_END: return "end";
         case TOK_ID: return "id";
         case TOK_NUM: return "num";
     }
     return "?";
 }
-
 
 std::string Token::TypeStr() {
     return TypeStr(this->type); // for instance (method)

@@ -12,6 +12,8 @@ public:
     Lexer(const std::string& expression);
     ~Lexer();
 
+    Lexer* Branch();
+
     Token* GetToken(); // current token, before next token is processed
 
     Token* NextToken(); // return next token, advance the iterator

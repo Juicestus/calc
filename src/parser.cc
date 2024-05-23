@@ -1,5 +1,27 @@
 #include "parser.h"
 
+Expr* Parser::ParseAssignment() {
+    LOG(1)
+    Token* tk = lex->GetToken();
+    if (tk->type != TOK_ID) {
+        return ParsePower();
+    }
+    LOG(2)
+    lex->Expect(TOK_ID);
+    Lexer* branch = lex->Branch();
+    bool assign = branch->Consume(TOK_ASSIGN);
+    LOG(3)
+    if (!assign) {
+        return ParsePower();
+    }
+    LOG(4)
+    std::string name = tk->value;
+    lex->Expect(TOK_ASSIGN);
+    LOG(5)
+    Expr* expr = ParseExpr();
+    return new AssignExpr(expr, name);
+}
+
 Expr* Parser::ParseAdditive() {
     LOG(1)
     return ParseBinaryOperator({TOK_PLUS, TOK_MINUS}, &Parser::ParseUnaryPrefix);
@@ -75,7 +97,7 @@ Expr* Parser::ParseElement() {
 Expr* Parser::ParseExpr() {
     bool grouped = lex->Consume(TOK_LPAREN);
     LOG(1)
-    Expr* expr = ParsePower();
+    Expr* expr = ParseAssignment();
     LOG(2)
     if (grouped) lex->Expect(TOK_RPAREN);
     return expr;

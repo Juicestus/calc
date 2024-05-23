@@ -29,6 +29,7 @@ int main(const int argc, const char** argv) {
 
         Parser* parser;
         Expr* expr;
+        double result;
 
         try {
             lexer = new Lexer(buff);
@@ -38,15 +39,17 @@ int main(const int argc, const char** argv) {
 
             expr = parser->ParseExpr();
 
+
+
         } catch (Exception* e) {
             std::cout << e->Str() << "\n";
             continue;
         }
 
         // Log the parsed expression:
-        // std::cout << expr->Str() << "\n";
+        std::cout << expr->Str() << "\n";
 
-        double result = expr->Eval();
+        result = expr->Eval();
 
         *prev_result_ptr = result;
 
