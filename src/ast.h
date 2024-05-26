@@ -84,12 +84,14 @@ public:
     double Eval();
 };
 
+using FuncCallback = std::function<double(std::vector<Expr*>)>;
+
 struct Function {
     std::string name;
-    std::function<double(std::vector<double>)> callback;
+    FuncCallback callback;
     int n_args;
 
-    Function(const std::string& name, std::function<double(std::vector<double>)> callback, int n_args)
+    Function(const std::string& name, FuncCallback callback, int n_args)
         : name(name), callback(callback), n_args(n_args) {}
 };
 
@@ -124,7 +126,7 @@ public:
 private:
     std::map<std::string, Function*> functions;
     std::map<std::string, double*> variables;
-    void AddFunc(const std::string& name, std::function<double(std::vector<double>)> callback, int n_args);
+    void AddFunc(const std::string& name, FuncCallback callback, int n_args);
 
     RuntimeManager();
 };
