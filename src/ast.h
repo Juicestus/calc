@@ -84,12 +84,20 @@ public:
     double Eval();
 };
 
+struct Function {
+    std::string name;
+    std::function<double(std::vector<double>)> callback;
+    int n_args;
+
+    Function(const std::string& name, std::function<double(std::vector<double>)> callback, int n_args)
+        : name(name), callback(callback), n_args(n_args) {}
+};
+
 class FuncCallExpr : public Expr {
 
 private:
-    std::function<double(std::vector<double>)> callback;
+    Function* func;
     std::vector<Expr*> args;
-    std::string name;
 
 public:
     FuncCallExpr(const std::string& name, std::vector<Expr*> args);
@@ -110,12 +118,13 @@ public:
         return instance;
     }
 
-    std::function<double(std::vector<double>)> ResolveFunction(const std::string& name);
+    Function* ResolveFunction(const std::string& name);
     double* ResolveVar(const std::string& name, bool instantiate_if_missing);
 
 private:
-    std::map<std::string, std::function<double(std::vector<double>)>> functions;
+    std::map<std::string, Function*> functions;
     std::map<std::string, double*> variables;
+    void AddFunc(const std::string& name, std::function<double(std::vector<double>)> callback, int n_args);
 
     RuntimeManager();
 };
