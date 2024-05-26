@@ -35,6 +35,7 @@ public:
 
     std::string Str();
     double Eval();
+    std::string Name();
 };
 
 class AssignExpr : public Expr {
@@ -123,12 +124,24 @@ public:
     Function* ResolveFunction(const std::string& name);
     double* ResolveVar(const std::string& name, bool instantiate_if_missing);
 
+    double* ResolveIntegrationVar(Expr* int_var);
+
+    bool EnterCalcFunc(const std::string& name);
+    void ExitCalcFunc(bool did_enter);
+
 private:
+    bool descent_into_calc_func = false;
+    double* h_deriv_ptr, * h_integ_ptr;    // holy shit C is so fucking dumb
+                                            // its T* V not T *V !! 
+
     std::map<std::string, Function*> functions;
     std::map<std::string, double*> variables;
     void AddFunc(const std::string& name, FuncCallback callback, int n_args);
 
     RuntimeManager();
+
+    double BuiltinNDeriv(Expr* func_expr, Expr* deriv_var, Expr* n);
+    double BuiltinNInteg(Expr* func_expr, Expr* integ_var, Expr* a, Expr* b);
 };
 
 #endif

@@ -82,6 +82,8 @@ Expr* Parser::ParseElement() {
         if (tk->type == TOK_LPAREN) {
             lex->Expect(tk->type); // cannot fail -- bad practice using this
             std::vector<Expr*> args;
+            
+            bool is_calc_func = RuntimeManager::GetInstance().EnterCalcFunc(name);
 
             if (lex->GetToken()->type != TOK_RPAREN) {
                 args.push_back(ParseExpr());
@@ -90,6 +92,8 @@ Expr* Parser::ParseElement() {
                 }
             }
             lex->Expect(TOK_RPAREN);
+
+            RuntimeManager::GetInstance().ExitCalcFunc(is_calc_func);
 
             return new FuncCallExpr(name, args);
         }
