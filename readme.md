@@ -28,7 +28,7 @@ Enter the shell using `bin/calc`.
 ### Variables 
 | Name | Definition | Description |
 | --- | --- | --- |
-| `_` | default to $ 0$ | Result of previous expression |
+| `_` | default to $0$ | Result of previous expression |
 | `pi` | $\pi = 3.14159...$ | Constant representing PI |
 | `e` | $e = 2.71828...$ | Constant representing Euler's number |
 | `h_deriv` | $10^{-7}$ | Infintecimal constant for `nderiv` |
