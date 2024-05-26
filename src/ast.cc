@@ -69,6 +69,7 @@ BinOpExpr::BinOpExpr(Expr* left, Expr* right, TokenType tk_type) {
         DEF_B_OP(TOK_MUL, x * y)
         DEF_B_OP(TOK_DIV, x / y)
         DEF_B_OP(TOK_POWER, std::pow(x, y))
+        DEF_B_OP(TOK_MOD, std::fmod(x, y))
     }
 
     throw new Exception("undefined operation", StrFmt("Operator [%s] is not defined", Token::TypeStr(tk_type)), -1,
@@ -191,7 +192,6 @@ RuntimeManager::RuntimeManager() {
     DEF_B_FUNC(1, "round", std::round(a[0]->Eval()))
     DEF_B_FUNC(2, "min", std::min(a[0]->Eval(), a[1]->Eval()))
     DEF_B_FUNC(2, "max", std::max(a[0]->Eval(), a[1]->Eval()))
-    DEF_B_FUNC(2, "fmod", std::fmod(a[0]->Eval(), a[1]->Eval()))
     DEF_B_FUNC(1, "sin", std::sin(a[0]->Eval()))
     DEF_B_FUNC(1, "cos", std::cos(a[0]->Eval()))
     DEF_B_FUNC(1, "tan", std::tan(a[0]->Eval()))

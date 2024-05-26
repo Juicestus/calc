@@ -21,6 +21,7 @@ enum TokenType {
     TOK_POWER,
     
     TOK_ASSIGN,
+    TOK_MOD,
 };
 
 class Token {
