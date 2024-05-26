@@ -153,7 +153,33 @@ double* RuntimeManager::ResolveVar(const std::string& name, bool instantiate_if_
     return variables[name];
 }
 
+#define DEF_B_FUNC(N, XPR) functions[N] = [](std::vector<double> args)->double { return XPR; };
+
 // initialize builtin functions
 RuntimeManager::RuntimeManager() {
-    functions["sin"] = [](std::vector<double> args)->double { return std::sin(args[0]); };
+    *ResolveVar("pi", true) = 3.141592653589793115997963468544185161590576171875; // float64 accurate
+    *ResolveVar("e", true) =  2.718281828459045235360287471352662497757247093700; // float64 accurate? (...699->700)
+
+    DEF_B_FUNC( "abs", std::abs(args[0]) )
+    DEF_B_FUNC( "sqrt", std::sqrt(args[0]) )
+    DEF_B_FUNC( "ln", std::log(args[0]) )
+    DEF_B_FUNC( "log", std::log(args[0]) / std::log(args[1]) )
+    DEF_B_FUNC( "exp", std::exp(args[0]) )
+    DEF_B_FUNC( "floor", std::floor(args[0]) )
+    DEF_B_FUNC( "ceil", std::ceil(args[0]) )
+    DEF_B_FUNC( "round", std::round(args[0]) )
+    DEF_B_FUNC( "min", std::min(args[0], args[1]) )
+    DEF_B_FUNC( "max", std::max(args[0], args[1]) )
+    DEF_B_FUNC( "fmod", std::fmod(args[0], args[1]) )
+    DEF_B_FUNC( "sin", std::sin(args[0]) )
+    DEF_B_FUNC( "cos", std::cos(args[0]) )
+    DEF_B_FUNC( "tan", std::tan(args[0]) )
+    DEF_B_FUNC( "asin", std::asin(args[0]) )
+    DEF_B_FUNC( "acos", std::acos(args[0]) )
+    DEF_B_FUNC( "atan", std::atan(args[0]) )
+    DEF_B_FUNC( "sinh", std::sinh(args[0]) )
+    DEF_B_FUNC( "cosh", std::cosh(args[0]) )
+    DEF_B_FUNC( "tanh", std::tanh(args[0]) )
+    DEF_B_FUNC( "hypot2", std::hypot(args[0], args[1]) )
+    DEF_B_FUNC( "hypot3", std::hypot(args[0], args[1], args[2]) )
 }
