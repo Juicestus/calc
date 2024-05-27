@@ -142,6 +142,9 @@ private:
 
     double BuiltinNDeriv(Expr* func_expr, Expr* deriv_var, Expr* n);
     double BuiltinNInteg(Expr* func_expr, Expr* integ_var, Expr* a, Expr* b);
+
+
+    // double BuiltinNInteg(Expr* func_expr, Expr* integ_var, Expr* a, Expr* b);
 };
 
 #endif

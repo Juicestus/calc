@@ -1,6 +1,6 @@
 #include "main.h"
 
-
+#define TIME_EVAL
 
 int main(const int argc, const char** argv) {
 
@@ -47,10 +47,22 @@ int main(const int argc, const char** argv) {
         // Log the parsed expression:
         // std::cout << expr->Str() << "\n";
 
+#ifdef TIME_EVAL 
+        auto begin = std::chrono::steady_clock::now();
+#endif
         result = expr->Eval();
 
         *prev_result_ptr = result;
 
-        std::cout << result << "\n";
+#ifdef TIME_EVAL
+        auto end = std::chrono::steady_clock::now();
+#endif
+
+        std::cout << result;
+#ifdef TIME_EVAL
+        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+        std::cout << " (" << elapsed << " ms)";
+#endif
+        std::cout << "\n";
     }
 }
