@@ -272,10 +272,11 @@ double RuntimeManager::BuiltinIfElse(Expr* cond, Expr* body_if, Expr* body_else)
 }
 
 double RuntimeManager::BuiltinWhile(Expr* cond, Expr* body) {
+    double sum = 0;
     while (cond->Eval() != 0) {
-        body->Eval();
+        sum += body->Eval();
     }
-    return 0;
+    return sum;
 }
 
 bool RuntimeManager::EnterCalcFunc(const std::string& name) {

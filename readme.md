@@ -58,5 +58,13 @@ Enter the shell using `bin/calc`.
 | `tanh(x)` | $\frac{e^{x} - e^{x}}{e^{x} + e^{x}}$ | Hyperbolic tangent |
 | `hypot2(a, b)` | $\sqrt{a^2 + b^2}$ | |
 | `hypot3(a, b, c)` | $\sqrt{a^2 + b^2 + c^2}$ | |
-| `nderiv(f, x, n)` | ${\frac{df}{dx} \rvert_{x=n} }$ | Derivative at $n$ **(calc)**|
+| `eq(a, b)` | $\begin{cases}1 &a = b,\\ -1  &  a \neq b.\end{cases}$ | Equality |
+| `neq(a, b)` | $\begin{cases}1 &a \neq b,\\ -1  &  a = b.\end{cases}$ | Inverse equality |
+| `lt(a, b)` | $\begin{cases}1 &a < b,\\ -1  &  a \geq b.\end{cases}$ | Less than |
+| `lte(a, b)` | $\begin{cases}1 &a \leq b,\\ -1  &  a > b.\end{cases}$ | Less than or equal to |
+| `gt(a, b)` | $\begin{cases}1 &a > b,\\ -1  &  a \leq b.\end{cases}$ | Greater than |
+| `gte(a, b)` | $\begin{cases}1 &a \geq b,\\ -1  &  a < b.\end{cases}$ | Greater than or equal to |
+| `ifelse(z, a, b)` | $\begin{cases}a &z \neq 0,\\ b  &  z = 0.\end{cases}$ | If/else ternary |
+| `while(z, f)` | $\sum\limits_{z \neq 0}{f}$ | While loop / summation |
+| `nderiv(f, x, n)` | ${\frac{df}{dx} \rvert_{x=n} }$ | Derivative at $n$|
 | `ninteg(f, x, a, b)` | ${\int_{a}^{b}{fdx}}$ | Definite integral from $a$ to $b$ |
