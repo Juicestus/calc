@@ -204,6 +204,16 @@ RuntimeManager::RuntimeManager() {
     DEF_B_FUNC(2, "hypot2", std::hypot(a[0]->Eval(), a[1]->Eval()))
     DEF_B_FUNC(3, "hypot3", std::hypot(a[0]->Eval(), a[1]->Eval(), a[2]->Eval()))
 
+    DEF_B_FUNC(2, "eq", a[0]->Eval() == a[1]->Eval());
+    DEF_B_FUNC(2, "neq", a[0]->Eval() != a[1]->Eval());
+    DEF_B_FUNC(2, "gt", a[0]->Eval() > a[1]->Eval());
+    DEF_B_FUNC(2, "gteq", a[0]->Eval() >= a[1]->Eval());
+    DEF_B_FUNC(2, "lt", a[0]->Eval() < a[1]->Eval());
+    DEF_B_FUNC(2, "lteq", a[0]->Eval() <= a[1]->Eval());
+
+    AddFunc("ifelse", [this](std::vector<Expr*> a) -> double { return this->BuiltinIfElse(a[0], a[1], a[2]); }, 3);
+    AddFunc("while", [this](std::vector<Expr*> a) -> double { return this->BuiltinWhile(a[0], a[1]); }, 2);
+
     AddFunc("nderiv", [this](std::vector<Expr*> a) -> double { return this->BuiltinNDeriv(a[0], a[1], a[2]); }, 3);
     AddFunc("ninteg", [this](std::vector<Expr*> a) -> double { return this->BuiltinNInteg(a[0], a[1], a[2], a[3]); }, 4);
 }
@@ -252,6 +262,20 @@ double RuntimeManager::BuiltinNInteg(Expr* func_expr, Expr* integ_var, Expr* a_x
     }
 
     return sum * h * .5;
+}
+
+double RuntimeManager::BuiltinIfElse(Expr* cond, Expr* body_if, Expr* body_else) {
+    if (cond->Eval() != 0) {
+        return body_if->Eval();
+    } 
+    return body_else->Eval();
+}
+
+double RuntimeManager::BuiltinWhile(Expr* cond, Expr* body) {
+    while (cond->Eval() != 0) {
+        body->Eval();
+    }
+    return 0;
 }
 
 bool RuntimeManager::EnterCalcFunc(const std::string& name) {
